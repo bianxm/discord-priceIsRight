@@ -6,7 +6,10 @@ class AmazonInfo():
                 'Accept-Language':'en-US, en;q=0.5'})
     
     def __init__(self, url):
-        self.soup = BeautifulSoup(requests.get(url, headers = self.HEADERS).content, 'lxml')
+        webpage = requests.get(url, headers = self.HEADERS)
+        # if webpage.status_code != 200:
+
+        self.soup = BeautifulSoup(webpage.content, 'lxml')
     
     def get_title(self):
         try:
