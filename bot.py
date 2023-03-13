@@ -34,7 +34,7 @@ async def on_message(message):
         return
 
     # get message tokens
-    startToken, *tokens = message.content.split() + ['']
+    startToken, *tokens = message.content.split() 
 
     if startToken == '$pir' or client.user.mentioned_in(message):
         if not is_round_running:
@@ -87,9 +87,8 @@ async def on_message(message):
                     # reset global variables
             else:
                 if tokens[0] == 'guess':
-                    this_guess = float(tokens[1])
-                    float_price = float(tokens[1][1:])
-                    guesses[abs] = guesses.get(abs,[]) + [message.author]
+                    difference = abs(float(tokens[1]) - float(listPrice[1:]))
+                    guesses[difference] = guesses.get(difference,[]) + [message.author]
                     
     
 
