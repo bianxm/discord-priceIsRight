@@ -2,3 +2,4 @@ TODO.md
 env
 .env
 amazon-scraper.py
+*pycache*
