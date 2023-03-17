@@ -69,19 +69,25 @@ async def on_message(message):
             # round playing logic 
             if tokens[0] == 'start':
                 await message.channel.send("Sorry, a round is already running!")
+                return
+            
             if message.author == challenger:
                 if tokens[0] == 'listName':
                     await message.channel.send(listing.get_title())
+                    return
                 
                 if tokens[0] == 'listImg':
                     await message.channel.send(listing.get_img())
+                    return
                 
                 if tokens[0] == 'listFeatures':
                     messageToSend = '\n\n'.join(['   - '+i for i in listing.get_features() if i is not None])
                     await message.channel.send(messageToSend)
+                    return
                 
                 if tokens[0] == 'reveal':
                     await message.channel.send(listPrice)
+                    return
                     # reveal price
 
                 if tokens[0] == 'endRound':
@@ -94,6 +100,7 @@ async def on_message(message):
                     is_round_running = False
                     guesses = {}
                     await message.channel.send(messageToSend)
+                    return
                     # reveal price
                     # reset global variables
             # else:
@@ -101,6 +108,7 @@ async def on_message(message):
                     difference = abs(float(tokens[1]) - float(listPrice[1:]))
                     guesses[difference] = guesses.get(difference,[]) + [message.author]
                     print(guesses)
+                    return
                     
     
 
