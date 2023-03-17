@@ -6,6 +6,7 @@ We don't quite follow Price is Right rules -- whoever guesses closest, wins. Tho
 Start your message with $pir or @<the bot> to call it, continued with the following commands:
 <pre>
 * '... start [Amazon url]': Start a round. The sender of this message will be the quizmaster, and won't be allowed to submit a guess. 
+* '... test [a number]': Start a round with the price to be guessed set as the given number. For testing purposes
 </pre>
 The quizmaster can do the following: 
 <pre>
@@ -13,7 +14,7 @@ The quizmaster can do the following:
 * '... listImg'     : See the Amazon listing featured image
 * '... listFeatures': See the Amazon listing features in a list... Sometimes junk entries come through, just ignore those >.<
 </pre>
-The players can do the following:
+The players (and, temporarily, the quizmaster) can do the following:
 <pre>
 * '... guess [guess price]': Submit a guess. Please, numbers only for now. Don't put the $, we'll add handling for that later
 </pre>

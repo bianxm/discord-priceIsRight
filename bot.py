@@ -41,6 +41,7 @@ async def on_message(message):
             if not tokens:
                 await message.channel.send(f"""Welcome to Discord The Price is Right, featuring Amazon!
             Start a round, or $pir help""")
+                return
             
             if tokens[0] == 'start':
                 listing = AmazonInfo(tokens[1])
@@ -49,7 +50,20 @@ async def on_message(message):
                 challenger = message.author
                 messageToSend = f"Round starts!"
                 messageToSend += f"\n{challenger.mention} is the quizmaster for this round"
+                # print(listing.soup)
                 await message.channel.send(messageToSend) # see who challenger is and save and mention
+                return
+            
+            if tokens[0] == 'test':
+                listing = AmazonInfo('https://www.york.ac.uk/teaching/cws/wws/webpage1.html')
+                listPrice = tokens[1]
+                is_round_running = True
+                challenger = message.author
+                messageToSend = f"Round starts!"
+                messageToSend += f"\n{challenger.mention} is the quizmaster for this round"
+                await message.channel.send(messageToSend) # see who challenger is and save and mention
+                return
+
         
         if is_round_running:
             # round playing logic 
@@ -66,10 +80,6 @@ async def on_message(message):
                     messageToSend = '\n\n'.join(['   - '+i for i in listing.get_features() if i is not None])
                     await message.channel.send(messageToSend)
                 
-                # if tokens[0] == 'getClosest':
-                    # pass
-                    # get who the current winner is and announce!
-                
                 if tokens[0] == 'reveal':
                     await message.channel.send(listPrice)
                     # reveal price
@@ -82,13 +92,15 @@ async def on_message(message):
                     messageToSend += f"\nCongrats! You guys won <3"
                     messageToSend += f"\n\n Ending round now"
                     is_round_running = False
+                    guesses = {}
                     await message.channel.send(messageToSend)
                     # reveal price
                     # reset global variables
-            else:
+            # else:
                 if tokens[0] == 'guess':
                     difference = abs(float(tokens[1]) - float(listPrice[1:]))
                     guesses[difference] = guesses.get(difference,[]) + [message.author]
+                    print(guesses)
                     
     
 
