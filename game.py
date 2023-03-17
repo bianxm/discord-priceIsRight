@@ -51,10 +51,14 @@ class Game():
         self.round = Round(challenger, listPrice)
 
     def end_round(self):
-        winner: list = self.round.get_round_winners()
+        winners: list = self.round.get_round_winners()
         self.round = None
         # (so that python cleans it up)
-        return winner
+        # add points for winners
+        for winner in winners:
+            self.points[winner] = self.points.get(winner,0) + 1
+        return winners
+        # return winners so bot.py can display them!
 
     def end_game(self):
         pass
@@ -68,9 +72,11 @@ class Round():
         self.guesses = {}
     
     def submit_guess(self, guesser: Member, guess: float):
-        pass
-        # self.guesses =  {guesser: guess}
+        self.guesses[guesser] = abs(self.listPrice - guess)
+        return self.guesses[guesser]
+        # print in bot.py for validation that the guess has been updated
 
     def get_round_winners(self) -> list[Member]:
-        pass
-        # go through
+        # self.guesses = dict{Member guesser: float guess}
+        lowestDif = min(self.guesses.values())
+        return [guesser for guesser, guessDif in self.guesses.items() if guessDif == lowestDif]
