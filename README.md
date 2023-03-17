@@ -6,7 +6,9 @@ We don't quite follow Price is Right rules -- whoever guesses closest, wins. Tho
 Start your message with $pir or @<the bot> to call it, continued with the following commands:
 <pre>
 * '... start [Amazon url]': Start a round. The sender of this message will be the quizmaster, and won't be allowed to submit a guess. 
+</pre>
 The quizmaster can do the following: 
+<pre>
 * '... listName'    : See the Amazon listing title
 * '... listImg'     : See the Amazon listing featured image
 * '... listFeatures': See the Amazon listing features in a list... Sometimes junk entries come through, just ignore those >.<
@@ -29,9 +31,13 @@ DISCORD_TOKEN=<your token here, as a string>
 </pre>
 5. Run 'bot.py'
 ## To-do
-* Test the actual game functionality :)
-* Link error handling: Link unreachable, not an Amazon link, etc...
-* Track scores across multiple rounds
-* Add price conversions for guesses
-* Add support for Amazon book listings (they're formatted differently so the existing scraper won't work, sadly)
+* Put Game in a separate class
+    * Track scores across multiple rounds
+    * (Add currency conversion for guesses)
+    * Each Discord server has own instance of Game
+* Amazon scraper improvements
+    * Add more measures to fool Amazon bot detection
+    * Handle case when Amazon catches the bot
+    * Other link error handling
+    * (Add support for Amazon book listings (they're formatted differently so the existing scraper won't work, sadly))
 * Fix the async logic to follow whatever best practices I'm not aware of yet
