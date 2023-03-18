@@ -46,9 +46,11 @@ class Game():
         # self.is_game_running: bool = True 
         # ^^ not needed, existence of this object implies game is running
         self.points = {}
+        self.round = None
 
     def start_round(self, challenger, listPrice):
         self.round = Round(challenger, listPrice)
+        return self.round.challenger
 
     def end_round(self): # -> list[Member]:
         winners: list = self.round.get_round_winners()
@@ -62,7 +64,7 @@ class Game():
 
     def end_game(self):
         highScore = max(self.points.values())
-        return [player for player, points in self.points.items() if highScore == points]
+        return ([player for player, points in self.points.items() if highScore == points], highScore)
         # nuke this game object from bot.py!!
 
 
