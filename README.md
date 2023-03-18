@@ -1,10 +1,20 @@
 # DISCORD BOT: Price is Right, powered by Amazon
 Play Price is Right on Discord!
-This bot uses Beautiful Soup to scrape product information from a given Amazon product page, and use that to play Price is Right.
-We don't quite follow Price is Right rules -- whoever guesses closest, wins. Though admittedly functionality to submit guesses and get the winner hasn't been implemented yet... But the web scraping works!
-## What it does
-Start your message with $pir or @<the bot> to call it, continued with the following commands:
-<pre>
+
+This bot will _eventually_ use Beautiful Soup to scrape product information from a given Amazon product page, and use that to play Price is Right, once I find a way to more consistently fool Amazon's anti-bot measures... But in the meantime!
+
+The bot allows you to have a game of multiple rounds of guessing. To start a round, the quizmaster gives the bot a number for everyone else to guess. Everyone then submits their guesses, and whoever is closest wins the round (yeah, not quite actual Price is Right rules). You can do this for as many rounds as you like! Once you tell the bot to end the game, it will announce the overall winners.
+## How to play
+Start your message with ```$pir``` or mention/ @ the bot to call it, then continue with the following commands:
+|Command|What it does|
+|---|---|
+| ```help```|Display available commands|
+|```testGame```|Start a game!|
+|```testRound <number>```|Start a round, with the given number as the 'secret' number to be guessed. (This will probably be moved to a DM from the bot to ask for the number to be guessed. TODO)|
+|```guess <number>```|Saves that number as your guess. (For now, everyone can guess, but in the future, the quizmaster for that round will not be able to guess. TODO)|
+|```endRound```|End the round, and display who guessed the closest|
+|```endGame```|End the game, and display who won the most rounds|
+<!-- <pre>
 * '... start [Amazon url]': Start a round. The sender of this message will be the quizmaster, and won't be allowed to submit a guess. 
 * '... test [a number]': Start a round with the price to be guessed set as the given number. For testing purposes
 </pre>
@@ -21,24 +31,20 @@ The players (and, temporarily, the quizmaster) can do the following:
 And everyone can:
 <pre>
 * '... help' : does not actually do anything yet, sorry
-</pre>
+</pre> -->
 ## Run your own
 1. Clone this repo and install everything in requirements.txt
 2. Set up a new application with a bot on Discord Developer 
 3. Add your bot to your desired server, giving it 'Send Messages' permissions
 4. Create a file .env in the project's root directory:
-<pre>
+```bash
 DISCORD_TOKEN=<your token here, as a string>
-</pre>
+```
 5. Run 'bot.py'
 ## To-do
-* Put Game in a separate class
-    * Track scores across multiple rounds
-    * (Add currency conversion for guesses)
-    * Each Discord server has own instance of Game
 * Amazon scraper improvements
     * Add more measures to fool Amazon bot detection
     * Handle case when Amazon catches the bot
     * Other link error handling
     * (Add support for Amazon book listings (they're formatted differently so the existing scraper won't work, sadly))
-* Fix the async logic to follow whatever best practices I'm not aware of yet
+* Refactor the bot to use discord.py's bot extension 
