@@ -1,8 +1,8 @@
-# from amazon import AmazonInfo
 import discord
 import os
 from dotenv import load_dotenv
-from game import Game, Round
+from helpmessage import HELPMESSAGE
+from game import Game
 
 load_dotenv()
 
@@ -10,7 +10,7 @@ intents = discord.Intents.default()
 intents.message_content = True
 client = discord.Client(intents=intents)
 
-currGame = None
+currGames = {}
 
 @client.event
 async def on_ready():
@@ -18,13 +18,16 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    global currGame
+    global currGames
 
     if message.author == client.user:
         return
 
     # get message tokens
     startToken, *tokens = message.content.split() 
+    # get guild id
+    guild = message.channel.guild.id
+    currGame = currGames.get(guild)
 
     if startToken == '$pir' or client.user.mentioned_in(message):
         if not currGame:
@@ -32,6 +35,10 @@ async def on_message(message):
                 messageToSend = "Welcome to Discord The Price is Right, featuring Amazon!"
                 messageToSend += "\nStart a round, or $pir help"
                 await message.channel.send(messageToSend)
+                return
+        
+            if tokens[0] == 'help':
+                await message.channel.send(HELPMESSAGE)
                 return
             
             #if tokens[0] == 'start':
@@ -46,25 +53,35 @@ async def on_message(message):
                 #return
             
             if tokens[0] == 'testGame':
-                #listing = AmazonInfo('https://www.york.ac.uk/teaching/cws/wws/webpage1.html')
-                #listPrice = tokens[1]
-                #is_round_running = True
-                #challenger = message.author
-                currGame = Game()
+                currGames[guild] = Game()
                 messageToSend = f"Game starts!"
                 await message.channel.send(messageToSend)
                 return
             
         if currGame:
+            if not tokens:
+                messageToSend = "Hi! Hope you're enjoying your game :)"
+                await message.channel.send(messageToSend)
+                return
+
+            if tokens[0] == 'help':
+                await message.channel.send(HELPMESSAGE)
+                return
+            
+            if tokens[0] == 'testGame':
+                messageToSend = f"Sorry, there is already a game running! '$pir endGame' first!"
+                await message.channel.send(messageToSend)
+                return
+            
             if currGame.round:
                 if tokens[0] == 'endGame' or tokens[0] == 'testRound':
                     messageToSend = f"Sorry, there is a round running! '$pir endRound' first!"
                     await message.channel.send(messageToSend)
                     return
 
-                if tokens[0] == 'start':
-                    await message.channel.send("Sorry, a round is already running!")
-                    return
+                #if tokens[0] == 'start':
+                    #await message.channel.send("Sorry, a round is already running!")
+                    #return
                 
                 #if message.author == currGame.round.challenger:
                     #if tokens[0] == 'listName':
@@ -88,7 +105,7 @@ async def on_message(message):
                 if tokens[0] == 'endRound':
                     # get current winner and announce!!
                     messageToSend = f"The price to guess was**{currGame.round.listPrice}**"
-                    winners = currGame.end_round()
+                    winners = currGames[guild].end_round()
                     #messageToSend = f"The price listed on Amazon is **{listPrice}**"
                     messageToSend += f"\n\n{' '.join([winner.mention for winner in winners])}"
                     messageToSend += f"\nCongrats! You guys won this round<3"
@@ -100,21 +117,36 @@ async def on_message(message):
                 # else:
                 if tokens[0] == 'guess':
                     guesser = message.author
-                    guess = currGame.round.submit_guess(guesser, float(tokens[1]))
+                    guess = currGames[guild].round.submit_guess(guesser, float(tokens[1]))
                     messageToSend = f"Thanks {guesser.mention}, your guess is now {guess}"
                     await message.channel.send(messageToSend)
                     return
+
             else:
+                if tokens[0] == 'guess':
+                    await message.channel.send("There's no round running yet! Do '$pir testRound [amount]' to start a new test round")
+                    return
+
+                if tokens[0] == 'endRound':
+                    messageToSend = f"There's no round running at the moment. Did you mean to do '$pir testRound'?"
+                    await message.channel.send(messageToSend)
+                    return
+
                 if tokens[0] == 'endGame':
-                    winners, highScore = currGame.end_game()
-                    currGame = None
-                    messageToSend = f"With {highScore} points, our winners are..."
-                    messageToSend += '\n' + ''.join([winner.mention for winner in winners])
+                    if not currGame.points:
+                        messageToSend = "You haven't played any rounds yet... Will go ahead and end this game though."
+                        messageToSend += "\nIf you want to start a new game, please do '$pir testGame' again"
+                        del currGames[guild] 
+                    else:
+                        winners, highScore = currGames[guild].end_game()
+                        del currGames[guild]
+                        messageToSend = f"With {highScore} points, our winners are..."
+                        messageToSend += '\n' + ''.join([winner.mention for winner in winners])
                     await message.channel.send(messageToSend)
                     return
 
                 if tokens[0] == 'testRound':
-                    challenger = currGame.start_round(message.author, float(tokens[1]))
+                    challenger = currGames[guild].start_round(message.author, float(tokens[1]))
                     messageToSend = f"Round starts!"
                     messageToSend += f"\n{challenger.mention} is the quizmaster for this round"
                     await message.channel.send(messageToSend) # see who challenger is and save and mention
