@@ -39,7 +39,7 @@
 ### end the round: display who got it closest and give them a point
 ### end game: show highest score and peace out
 
-from discord import Member
+#from discord import Member
 
 class Game():
     def __init__(self):
@@ -50,7 +50,7 @@ class Game():
     def start_round(self, challenger, listPrice):
         self.round = Round(challenger, listPrice)
 
-    def end_round(self):
+    def end_round(self): # -> list[Member]:
         winners: list = self.round.get_round_winners()
         self.round = None
         # (so that python cleans it up)
@@ -61,7 +61,8 @@ class Game():
         # return winners so bot.py can display them!
 
     def end_game(self):
-        pass
+        highScore = max(self.points.values())
+        return [player for player, points in self.points.items() if highScore == points]
         # nuke this game object from bot.py!!
 
 
@@ -71,12 +72,25 @@ class Round():
         self.listPrice: float = listPrice
         self.guesses = {}
     
-    def submit_guess(self, guesser: Member, guess: float):
-        self.guesses[guesser] = abs(self.listPrice - guess)
+    def submit_guess(self, guesser, guess: float):
+        self.guesses[guesser] = guess
         return self.guesses[guesser]
+        # self.guesses[guesser] = abs(self.listPrice - guess)
         # print in bot.py for validation that the guess has been updated
 
-    def get_round_winners(self) -> list[Member]:
+    def get_round_winners(self): # -> list[Member]:
         # self.guesses = dict{Member guesser: float guess}
-        lowestDif = min(self.guesses.values())
-        return [guesser for guesser, guessDif in self.guesses.items() if guessDif == lowestDif]
+        #lowestDif = min(self.guesses.values())
+        # return [guesser for guesser, guessDif in self.guesses.items() if guessDif == lowestDif]
+        items = list(self.guesses.items())
+        lowestDif = abs(self.listPrice - items[0][1])
+        winners = [items[0][0]]
+        for this_guesser, this_guess in items[1:]:
+            if abs(this_guess - self.listPrice) == lowestDif:
+                winners += [this_guesser]
+            if abs(this_guess - self.listPrice) < lowestDif:
+                winners = [this_guesser]
+        return winners
+        # later: handle when guesses is empty!
+
+        
