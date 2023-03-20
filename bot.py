@@ -146,7 +146,16 @@ async def on_message(message):
                     return
 
                 if tokens[0] == 'testRound':
-                    challenger = currGames[guild].start_round(message.author, float(tokens[1]))
+                    challenger = currGames[guild].start_round(message.author)
+                    currGames[guild].round.listPrice = float(tokens[1])
+                    messageToSend = f"Round starts!"
+                    messageToSend += f"\n{challenger.mention} is the quizmaster for this round"
+                    await message.channel.send(messageToSend) # see who challenger is and save and mention
+                    return
+                
+                if tokens[0] == 'startRound':
+                    # DM message.author to get the secret number
+                    # challenger = currGames[guild].start_round(message.author, float(tokens[1]))
                     messageToSend = f"Round starts!"
                     messageToSend += f"\n{challenger.mention} is the quizmaster for this round"
                     await message.channel.send(messageToSend) # see who challenger is and save and mention

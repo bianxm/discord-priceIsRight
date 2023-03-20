@@ -48,8 +48,9 @@ class Game():
         self.points = {}
         self.round = None
 
-    def start_round(self, challenger, listPrice):
-        self.round = Round(challenger, listPrice)
+    def start_round(self, challenger):
+        self.round = Round(challenger)
+        # self.round.listPrice = listPrice
         return self.round.challenger
 
     def end_round(self): # -> list[Member]:
@@ -69,7 +70,7 @@ class Game():
 
 
 class Round():
-    def __init__(self, challenger, listPrice): #same as starting a round
+    def __init__(self, challenger, listPrice = None): #same as starting a round
         self.challenger = challenger #Member obj
         self.listPrice: float = listPrice
         self.guesses = {}
