@@ -10,7 +10,8 @@ Start your message with ```$pir``` or mention/ @ the bot to call it, then contin
 |---|---|
 | ```help```|Display available commands|
 |```testGame```|Start a game!|
-|```testRound <number>```|Start a round, with the given number as the 'secret' number to be guessed. (This will probably be moved to a DM from the bot to ask for the number to be guessed. TODO)|
+|```testRound <number>```|Start a round, with the given number as the 'secret' number to be guessed. (Mainly for testing purposes. To keep your secret number secret, use ```startRound``` instead!)|
+|```startRound```|Start a round. The bot will DM the user who gave this command to ask for a secret number for the others to guess.|
 |```guess <number>```|Saves that number as your guess. (For now, everyone can guess, but in the future, the quizmaster for that round will not be able to guess. TODO)|
 |```endRound```|End the round, and display who guessed the closest|
 |```endGame```|End the game, and display who won the most rounds|
