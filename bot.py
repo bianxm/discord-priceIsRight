@@ -20,7 +20,7 @@ async def on_ready():
 async def on_message(message):
     global currGames
 
-    if message.author == client.user:
+    if message.author == client.user or isinstance(message.channel, discord.channel.DMChannel):
         return
 
     # get message tokens
@@ -155,11 +155,23 @@ async def on_message(message):
                 
                 if tokens[0] == 'startRound':
                     # DM message.author to get the secret number
-                    # challenger = currGames[guild].start_round(message.author, float(tokens[1]))
-                    messageToSend = f"Round starts!"
+                    challenger = currGames[guild].start_round(message.author)
+                    await message.channel.send("Waiting to be given secret number...")
+                    currGames[guild].round.listPrice = await get_secret(challenger)
+                    messageToSend = f"Secret number received!\nRound starts!"
                     messageToSend += f"\n{challenger.mention} is the quizmaster for this round"
                     await message.channel.send(messageToSend) # see who challenger is and save and mention
                     return
+
+async def get_secret(quizmaster):
+    await quizmaster.send(f"Give me your secret number")
+    def check(m):
+        return m.channel == quizmaster.dm_channel
+    # try:
+    reply = await client.wait_for('message', check=check)
+    #except asyncio.TimeoutError:
+        #await quizmaster.send('Took too long... Round aborted, please')
+    return float(reply.content)
                     
 
 client.run(os.environ['DISCORD_TOKEN'])

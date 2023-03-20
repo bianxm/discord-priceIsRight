@@ -48,3 +48,6 @@ DISCORD_TOKEN=<your token here, as a string>
     * Other link error handling
     * (Add support for Amazon book listings (they're formatted differently so the existing scraper won't work, sadly))
 * Refactor the bot to use discord.py's bot extension 
+* Error handling
+    * endRound when there hasn't been any guesses yet
+    * given not numbers when I'm expecting numbers
