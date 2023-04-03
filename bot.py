@@ -110,7 +110,7 @@ async def on_message(message):
                     messageToSend += f"\n\n{' '.join([winner.mention for winner in winners])}"
                     messageToSend += f"\nCongrats! You guys won this round<3"
                     messageToSend += f"\n\n Ending round now"
-                    messageToSend += f"\n'$pir testRound [price]' for new round"
+                    messageToSend += f"\n'$pir startRound' for new round"
                     messageToSend += f"\n'$pir endGame' to end game and announce winners!"
                     await message.channel.send(messageToSend)
                     return
@@ -124,11 +124,11 @@ async def on_message(message):
 
             else:
                 if tokens[0] == 'guess':
-                    await message.channel.send("There's no round running yet! Do '$pir testRound [amount]' to start a new test round")
+                    await message.channel.send("There's no round running yet! Do '$pir startRound' to start a new test round")
                     return
 
                 if tokens[0] == 'endRound':
-                    messageToSend = f"There's no round running at the moment. Did you mean to do '$pir testRound'?"
+                    messageToSend = f"There's no round running at the moment. Did you mean to do '$pir startRound'?"
                     await message.channel.send(messageToSend)
                     return
 

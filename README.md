@@ -52,3 +52,4 @@ DISCORD_TOKEN=<your token here, as a string>
 * Error handling
     * endRound when there hasn't been any guesses yet
     * given not numbers when I'm expecting numbers
+    * waiting too long to get secret number (set timeout)
